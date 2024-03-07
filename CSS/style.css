@@ -1,0 +1,100 @@
+@font-face {
+    font-family: "Redensek";
+    src: url('/Fonts/Redensek.ttf');
+}
+
+@font-face {
+    font-family: "Nunito";
+    src: url('/Fonts/Nunito-Regular.ttf');
+}
+
+@font-face {
+    font-family: "Poppins";
+    src: url('/Fonts/Poppins-Regular.ttf');
+}
+
+@font-face {
+    font-family: "SourceSans";
+    src: url('/Fonts/SourceSans.ttf');
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #404eed;
+    font-family: SourceSans;
+}
+
+#Game-World {
+    position: relative;
+    width: 240px;
+    height: 208px;
+    background: url("/Assets/TestMap.png");
+    background-repeat: no-repeat;
+    transform: scale(3);
+    image-rendering: pixelated;
+}
+
+.player-info {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 1em;
+    display: flex;
+    gap: 0.5em;
+    align-items: flex-end
+}
+
+.Grid-Cell {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+}
+
+.Character {
+    transition: transform 400ms;
+}
+
+.Character.you {
+    z-index: 1;
+}
+
+.Sprite {
+    overflow: hidden;
+    top: -2px;
+    background: url("/Assets/CharacterSheet.png");
+}
+
+.Character[data-direction="right"] .Sprite {
+    background-position-x: 16px;
+}
+
+.Character[data-color="red"] .Sprite {
+    background-position-y: 16px;
+}
+
+.PlayerInfoContainer {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: -10px;
+    left: 0px;
+    font-size: 5px;
+    width: 100%;
+    border-radius: 1px;
+    font-weight: bold;
+    background: #333;
+    color: white;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
