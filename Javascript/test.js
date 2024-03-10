@@ -1,3 +1,4 @@
+import { BufferUtilities } from "./buffer-utilities.js";
 import { triangle } from "./Shaders/shader.js";
 import { QuadGeometry } from "./geometry.js";
 import { Texture } from "./texture.js";
@@ -12,6 +13,7 @@ class GameEngine {
             alert("WebGPU is not supported");
             return;
         }
+
         const adapter = await navigator.gpu.requestAdapter({
             powerPreference: "low-power"
         });
@@ -25,12 +27,13 @@ class GameEngine {
             format: navigator.gpu.getPreferredCanvasFormat(),
         });
 
-        this.TestTexture = await Texture.CreateTextureFromURL(this.Device, "/Assets/uv_test.png");
+        this.TestTexture = await Texture.CreateTextureFromURL(this.Device, "/Assets/TestMap.png");
         this.PrepareModel();
         const geometry = new QuadGeometry();
-        this.PositonBuffer = this.CreateBuffer(new Float32Array(geometry.Position));
-        this.ColorBuffer = this.CreateBuffer(new Float32Array(geometry.Colors));
-        this.TextureCoordinatesBuffer = this.CreateBuffer(new Float32Array(geometry.TextureCoordinates));
+        this.PositonBuffer = BufferUtilities.CreateBuffer(this.Device, new Float32Array(geometry.Position));
+        this.ColorBuffer = BufferUtilities.CreateBuffer(this.Device, new Float32Array(geometry.Colors));
+        this.TextureCoordinatesBuffer = BufferUtilities.CreateBuffer(this.Device, new Float32Array(geometry.TextureCoordinates));
+        this.IndexBuffer = BufferUtilities.CreateBuffer(this.Device, new Uint16Array(geometry.Indices));
     }
 
     async PrepareModel() {
@@ -86,16 +89,16 @@ class GameEngine {
                 format: navigator.gpu.getPreferredCanvasFormat(),
                 blend: {
                     color: {
-                      srcFactor: "one",
-                      dstFactor: "one-minus-src-alpha",
-                      operation: "add"
+                        srcFactor: "one",
+                        dstFactor: "one-minus-src-alpha",
+                        operation: "add"
                     },
                     alpha: {
-                      srcFactor: "one",
-                      dstFactor: "one-minus-src-alpha",
-                      operation: "add"
+                        srcFactor: "one",
+                        dstFactor: "one-minus-src-alpha",
+                        operation: "add"
                     }
-                  }
+                }
             }]
         };
 
@@ -154,25 +157,15 @@ class GameEngine {
         // Draw here
         passEncoder.setPipeline(this.Pipeline);
 
+        passEncoder.setIndexBuffer(this.IndexBuffer, "uint16");
         passEncoder.setVertexBuffer(0, this.PositonBuffer);
         passEncoder.setVertexBuffer(1, this.ColorBuffer);
         passEncoder.setVertexBuffer(2, this.TextureCoordinatesBuffer);
         passEncoder.setBindGroup(0, this.TextureBindGroup);
 
-        passEncoder.draw(6);
+        passEncoder.drawIndexed(6);
         passEncoder.end();
         this.Device.queue.submit([commandEncoder.finish()]);
-    }
-
-    CreateBuffer(data) {
-        const buffer = this.Device.createBuffer({
-            size: data.byteLength,
-            usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST,
-            mappedAtCreation: true
-        });
-        new Float32Array(buffer.getMappedRange()).set(data);
-        buffer.unmap();
-        return buffer;
     }
 }
 

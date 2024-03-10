@@ -1,7 +1,7 @@
 export class Texture {
-    constructor(Texture, Sampler){
-        this.Texture = Texture;
-        this.Sampler = Sampler;
+    constructor(texture, sampler){
+        this.Texture = texture;
+        this.Sampler = sampler;
     }
 
     static async CreateTexture(device, image){
