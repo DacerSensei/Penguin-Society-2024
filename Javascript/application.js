@@ -146,7 +146,6 @@ class KeyPressListener {
                 keySafe = true;
             }
         };
-
         document.addEventListener("keydown", this.KeyDownFunction);
         document.addEventListener("keyup", this.KeyUpFunction);
     }

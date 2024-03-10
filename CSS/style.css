@@ -32,6 +32,7 @@ body {
     justify-content: center;
     background-color: #404eed;
     font-family: SourceSans;
+    overflow: hidden;
 }
 
 #Game-World {
@@ -97,4 +98,11 @@ body {
     color: white;
     text-transform: uppercase;
     white-space: nowrap;
+}
+
+
+/* Test */
+
+#Scene {
+    border: black solid 1px;
 }
