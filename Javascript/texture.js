@@ -1,9 +1,15 @@
 export class Texture {
-    constructor(texture, sampler){
+    constructor(texture, sampler, id){
         this.Texture = texture;
         this.Sampler = sampler;
+        this.Id = id;
     }
 
+    /**
+     * Creates an instance of Texture.
+     * @param {GPUDevice} device - Instance of GPU device in WebGPU.
+     * @param {Image} image - Instance of Image.
+     */
     static async CreateTexture(device, image){
         const texture = device.createTexture({
             size: {
@@ -30,9 +36,14 @@ export class Texture {
             minFilter: "nearest"
         });
 
-        return new Texture(texture, sampler);
+        return new Texture(texture, sampler, image.src);
     }
 
+    /**
+     * Creates an instance of Texture from URL.
+     * @param {GPUDevice} device - Instance of GPU device in WebGPU.
+     * @param {string} url - URL string.
+     */
     static async CreateTextureFromURL(device, url) {
         return new Promise((resolve, reject) => {
             const image = new Image();
@@ -46,7 +57,7 @@ export class Texture {
         .then(image => Texture.CreateTexture(device, image))
         .catch(error => {
             console.error("Error loading texture:", error);
-            throw error; // Propagate the error further
+            throw error;
         });
     }
 }

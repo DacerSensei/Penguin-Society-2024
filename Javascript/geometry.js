@@ -5,14 +5,14 @@ export class QuadGeometry {
         this.Vertices = [
             // x y                     u    v    r    g    b 
             x, y,                      0.0, 0.0, 1.0, 1.0, 1.0, // top left 
-            x + height, y,             1.0, 0.0, 1.0, 1.0, 1.0, // top right
+            x + width, y,              1.0, 0.0, 1.0, 1.0, 1.0, // top right
             x + width, y + height,     1.0, 1.0, 1.0, 1.0, 1.0, // bottom right
-            x, x + width,              0.0, 1.0, 1.0, 1.0, 1.0, // bottom left 
+            x, y + height,             0.0, 1.0, 1.0, 1.0, 1.0, // bottom left 
         ];
 
         this.Indices = [
-            0, 1, 2,
-            0, 2, 3
+            0, 1, 3,
+            3, 2, 1
         ]
     }
 

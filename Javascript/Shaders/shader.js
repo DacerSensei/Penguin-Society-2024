@@ -1,4 +1,4 @@
-export const triangle = `
+export const Shader = `
 struct VertexOut {
     @builtin(position) position: vec4f,
     @location(0) textureCoordinates: vec2f,
