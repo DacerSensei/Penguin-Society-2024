@@ -1,0 +1,4 @@
+<TextureAtlas imagePath="./CharacterSheet.png">
+    <SubTexture name="CharacterPurple.png" x="0" y="0" width="16" height="16"/>
+	<SubTexture name="CharacterRed.png" x="0" y="16" width="16" height="16"/>
+</TextureAtlas>

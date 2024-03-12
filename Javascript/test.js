@@ -49,9 +49,11 @@ class GameEngine {
         this.SpriteRenderer.FramePass(this.PassEncoder);
         // Draw here
 
-        for(let i = 0; i < 1; i++){
-            this.SpriteRenderer.DrawSprite(Content.PlayerTexture, new Rect(Math.random() * this.Canvas.width, Math.random() * this.Canvas.height, 16 * 3, 16 * 3));
-        }
+        const playerSprite = Content.Sprites["CharacterPurple.png"];
+        this.SpriteRenderer.DrawSpriteSource(playerSprite.Texture, playerSprite.DrawRect, playerSprite.SourceRect);
+
+        // this.SpriteRenderer.DrawSpriteSource(Content.Test, new Rect(0, 0, 16 * 3, 16 * 3), new Rect(0, 0, 16, 16));
+        // this.SpriteRenderer.DrawSpriteSource(Content.Test, new Rect(32, 32, 16 * 3, 16 * 3), new Rect(0, 16, 16, 16));
 
         // End Draw
         this.SpriteRenderer.FrameEnd();

@@ -1,8 +1,10 @@
 export class Texture {
-    constructor(texture, sampler, id){
+    constructor(texture, sampler, id, width, height){
         this.Texture = texture;
         this.Sampler = sampler;
         this.Id = id;
+        this.Width = width;
+        this.Height = height;
     }
 
     /**
@@ -36,7 +38,7 @@ export class Texture {
             minFilter: "nearest"
         });
 
-        return new Texture(texture, sampler, image.src);
+        return new Texture(texture, sampler, image.src, image.width, image.height);
     }
 
     /**
