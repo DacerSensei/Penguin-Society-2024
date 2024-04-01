@@ -10,6 +10,8 @@ class GameEngine {
         this.Canvas.width = 1024;
         this.Canvas.height = 576;
 
+
+
         this.Context = this.Canvas.getContext("webgpu");
         if (!this.Context) {
             alert("WebGPU is not supported");
@@ -49,10 +51,14 @@ class GameEngine {
         this.SpriteRenderer.FramePass(this.PassEncoder);
         // Draw here
 
-        const playerSprite = Content.Sprites["CharacterPurple.png"];
-        this.SpriteRenderer.DrawSpriteSource(playerSprite.Texture, playerSprite.DrawRect, playerSprite.SourceRect);
+        const playerSprite = Content.Sprites["CharacterWhite.png"];
+        playerSprite.DrawRect.X += 5;
+        playerSprite.DrawRect.Y += 5;
+        const resize = new Rect(playerSprite.DrawRect.X, playerSprite.DrawRect.Y, 96, 96);
+        this.SpriteRenderer.DrawSpriteSource(playerSprite.Texture, resize, playerSprite.SourceRect);
 
-        // this.SpriteRenderer.DrawSpriteSource(Content.Test, new Rect(0, 0, 16 * 3, 16 * 3), new Rect(0, 0, 16, 16));
+
+        // this.SpriteRenderer.DrawSpriteSource(Content.Test, new Rect(this.Canvas.width / 2 - 32, this.Canvas.height / 2 - 32, 256, 256), new Rect(0, 0, 256, 256));
         // this.SpriteRenderer.DrawSpriteSource(Content.Test, new Rect(32, 32, 16 * 3, 16 * 3), new Rect(0, 16, 16, 16));
 
         // End Draw

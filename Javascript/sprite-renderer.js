@@ -4,7 +4,7 @@ import { Camera } from "./camera.js";
 import { Rect } from "./rect.js";
 import { Texture } from "./texture.js";
 
-const MAX_NUMBER_OF_SPRITE = 1000;
+const MAX_NUMBER_OF_SPRITE = 10000;
 const INDICES_PER_SPRITE = 6; // 2 triangle per sprite
 const FLOAT_PER_VERTEX = 7;
 const FLOAT_PER_SPRITE = 4 * FLOAT_PER_VERTEX;
@@ -70,12 +70,13 @@ export class SpriteRenderer {
                 pipeline = new SpritePipeline(this.Device, texture, this.ProjectionViewMatrixBuffer);
                 this.PipelinesPerTexture[texture.Id] = pipeline;
             }
-
+            
             let batchDrawCalls = this.BatchDrawCallPerTexture[texture.Id];
             if (!batchDrawCalls) {
                 this.BatchDrawCallPerTexture[texture.Id] = [];
             }
         }
+        
         const arrayOfBatchCalls = this.BatchDrawCallPerTexture[texture.Id];
         let batchDrawCall = arrayOfBatchCalls[arrayOfBatchCalls.length - 1];
         if (!batchDrawCall) {

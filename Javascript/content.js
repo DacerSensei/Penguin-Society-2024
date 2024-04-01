@@ -8,7 +8,7 @@ export class Content {
     }
     static async Initialize(device) {
         this.PlayerTexture = await Texture.CreateTextureFromURL(device, "/Assets/uv_test.png");
-        this.Test = await Texture.CreateTextureFromURL(device, "/Assets/Spritesheet/CharacterSheet.png");
+        this.Test = await Texture.CreateTextureFromURL(device, "/Assets/SpriteSheet/sample.png");
 
         this.Sprites = await this.LoadSpriteSheet();
     }

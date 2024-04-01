@@ -42,13 +42,13 @@ export class SpritePipeline {
             targets: [{
                 format: navigator.gpu.getPreferredCanvasFormat(),
                 blend: {
-                    color: {
-                        srcFactor: "one",
+                    color: { // black outline means premultiplied, white means straight
+                        srcFactor: "src-alpha", // one if premultiplied and src-alpha if straight
                         dstFactor: "one-minus-src-alpha",
                         operation: "add"
                     },
                     alpha: {
-                        srcFactor: "one",
+                        srcFactor: "src-alpha", // one if premultiplied and src-alpha if straight
                         dstFactor: "one-minus-src-alpha",
                         operation: "add"
                     }
