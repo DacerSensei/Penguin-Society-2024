@@ -48,7 +48,7 @@ export class SpritePipeline {
                         operation: "add"
                     },
                     alpha: {
-                        srcFactor: "src-alpha", // one if premultiplied and src-alpha if straight
+                        srcFactor: "one", // one if premultiplied and src-alpha if straight
                         dstFactor: "one-minus-src-alpha",
                         operation: "add"
                     }

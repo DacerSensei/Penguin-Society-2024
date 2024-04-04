@@ -16,4 +16,8 @@ export class Rect {
         this.Width = width;
         this.Height = height;
     }
+
+    Copy(){
+        return new Rect(this.X, this.Y, this.Width, this.Height);
+    }
 }

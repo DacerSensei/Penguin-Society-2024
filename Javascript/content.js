@@ -1,6 +1,6 @@
-import { Texture } from "./texture.js";
-import { Sprite } from "./sprite.js";
-import { Rect } from "./rect.js";
+import { Texture } from "./Texture.js";
+import { Sprite } from "./Sprite.js";
+import { Rect } from "./Rect.js";
 
 export class Content {
     constructor() {
@@ -21,7 +21,7 @@ export class Content {
         const xmlDoc = parser.parseFromString(sheetXmlText, "text/html");
 
         xmlDoc.querySelectorAll("SubTexture").forEach(subTexture => {
-            const name = subTexture.getAttribute("name");
+            const name = subTexture.getAttribute("name").replace(".png", "");
             const x = parseInt(subTexture.getAttribute("x"));
             const y = parseInt(subTexture.getAttribute("y"));
             const width = parseInt(subTexture.getAttribute("width"));

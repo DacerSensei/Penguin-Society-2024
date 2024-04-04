@@ -1,16 +1,23 @@
-import { Content } from "./content.js";
-import { Rect } from "./rect.js";
-import { SpriteRenderer } from "./sprite-renderer.js";
+import { Content } from "./Content.js";
+import { Rect } from "./Rect.js";
+import { SpriteRenderer } from "./SpriteRenderer.js";
+import { Color } from "./Color.js";
+import { Rotation } from "./Rotation.js";
+import { Origin } from "./Toolkit.js";
+import { InputManager } from "./InputManager.js";
 
-class GameEngine {
+export class GameEngine {
+    constructor(){
+        this.LastTime = 0;
+        this.InputManager;
+    }
+
     async InitializeEngine() {
         this.PassEncoder;
 
         this.Canvas = document.getElementById("Scene");
         this.Canvas.width = 1024;
         this.Canvas.height = 576;
-
-
 
         this.Context = this.Canvas.getContext("webgpu");
         if (!this.Context) {
@@ -35,9 +42,17 @@ class GameEngine {
 
         this.SpriteRenderer = new SpriteRenderer(this.Device, this.Canvas.width, this.Canvas.height);
         this.SpriteRenderer.Initialize();
+
+        this.InputManager = new InputManager();
     }
 
     Draw() {
+        // For normalize fps in every machine
+        const now = performance.now();
+        const deltaTime = now - this.LastTime;
+        this.LastTime = now;
+        this.OnUpdate(deltaTime);
+        
         const commandEncoder = this.Device.createCommandEncoder();
         const renderPassDescriptor = {
             colorAttachments: [{
@@ -51,11 +66,7 @@ class GameEngine {
         this.SpriteRenderer.FramePass(this.PassEncoder);
         // Draw here
 
-        const playerSprite = Content.Sprites["CharacterWhite.png"];
-        playerSprite.DrawRect.X += 5;
-        playerSprite.DrawRect.Y += 5;
-        const resize = new Rect(playerSprite.DrawRect.X, playerSprite.DrawRect.Y, 96, 96);
-        this.SpriteRenderer.DrawSpriteSource(playerSprite.Texture, resize, playerSprite.SourceRect);
+        this.OnDraw();
 
 
         // this.SpriteRenderer.DrawSpriteSource(Content.Test, new Rect(this.Canvas.width / 2 - 32, this.Canvas.height / 2 - 32, 256, 256), new Rect(0, 0, 256, 256));
@@ -67,7 +78,12 @@ class GameEngine {
         this.Device.queue.submit([commandEncoder.finish()]);
         window.requestAnimationFrame(() => this.Draw());
     }
-}
 
-const Game = new GameEngine();
-Game.InitializeEngine().then(() => Game.Draw());
+    OnUpdate = (deltaTime) => {
+
+    };
+
+    OnDraw = () => {
+
+    }
+}

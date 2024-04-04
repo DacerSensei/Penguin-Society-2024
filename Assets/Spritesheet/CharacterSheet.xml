@@ -1,4 +1,4 @@
 <TextureAtlas imagePath="./sample.png">
-    <SubTexture name="CharacterWhite.png" x="1280" y="0" width="256" height="256"/>
+    <SubTexture name="CharacterWhite" x="1280" y="0" width="256" height="256"/>
 	<!-- <SubTexture name="CharacterRed.png" x="0" y="16" width="16" height="16"/> -->
 </TextureAtlas>

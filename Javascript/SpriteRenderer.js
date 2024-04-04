@@ -1,8 +1,12 @@
-import { SpritePipeline } from "./sprite-pipeline.js";
-import { BufferUtilities } from "./buffer-utilities.js";
-import { Camera } from "./camera.js";
-import { Rect } from "./rect.js";
-import { Texture } from "./texture.js";
+import { SpritePipeline } from "./SpritePipeline.js";
+import { BufferUtilities } from "./BufferUtilities.js";
+import { Camera } from "./Camera.js";
+import { Rect } from "./Rect.js";
+import { Texture } from "./Texture.js";
+import { Color } from "./Color.js";
+import { Rotation } from "./Rotation.js";
+import { Origin } from "./Toolkit.js";
+import * as vec2 from "../Library/Matrix/vec2.js";
 
 const MAX_NUMBER_OF_SPRITE = 10000;
 const INDICES_PER_SPRITE = 6; // 2 triangle per sprite
@@ -24,6 +28,11 @@ export class SpriteRenderer {
         this.PipelinesPerTexture = {};
         this.BatchDrawCallPerTexture = {};
         this.AllocatedVertexBuffers = [];
+
+        this.Vertices = [vec2.create(), vec2.create(), vec2.create(), vec2.create()]; // top left - top right - bottom right - bottom left
+        this.RotationOrigin = vec2.create();
+
+        this.DefaultColor = new Color();
     }
 
     Initialize() {
@@ -70,13 +79,13 @@ export class SpriteRenderer {
                 pipeline = new SpritePipeline(this.Device, texture, this.ProjectionViewMatrixBuffer);
                 this.PipelinesPerTexture[texture.Id] = pipeline;
             }
-            
+
             let batchDrawCalls = this.BatchDrawCallPerTexture[texture.Id];
             if (!batchDrawCalls) {
                 this.BatchDrawCallPerTexture[texture.Id] = [];
             }
         }
-        
+
         const arrayOfBatchCalls = this.BatchDrawCallPerTexture[texture.Id];
         let batchDrawCall = arrayOfBatchCalls[arrayOfBatchCalls.length - 1];
         if (!batchDrawCall) {
@@ -84,7 +93,7 @@ export class SpriteRenderer {
             this.BatchDrawCallPerTexture[texture.Id].push(batchDrawCall);
         }
 
-        if(batchDrawCall.InstanceCount == MAX_NUMBER_OF_SPRITE){
+        if (batchDrawCall.InstanceCount == MAX_NUMBER_OF_SPRITE) {
             const newBatchDrawCall = new BatchDrawCall(this.PipelinesPerTexture[texture.Id])
             this.BatchDrawCallPerTexture[texture.Id].push(newBatchDrawCall);
             batchDrawCall = newBatchDrawCall;
@@ -126,7 +135,7 @@ export class SpriteRenderer {
      * @param {Rect} rect - Instance of Rect.
      * @param {Rect} rect - Instance of Rect.
      */
-    DrawSpriteSource(texture, rect, sourceRect) {
+    DrawSpriteSource(texture, rect, sourceRect, color = this.DefaultColor, rotation = null) {
         if (this.CurrentTexture != texture) {
             this.CurrentTexture = texture;
 
@@ -148,7 +157,7 @@ export class SpriteRenderer {
             this.BatchDrawCallPerTexture[texture.Id].push(batchDrawCall);
         }
 
-        if(batchDrawCall.InstanceCount == MAX_NUMBER_OF_SPRITE){
+        if (batchDrawCall.InstanceCount == MAX_NUMBER_OF_SPRITE) {
             const newBatchDrawCall = new BatchDrawCall(this.PipelinesPerTexture[texture.Id])
             this.BatchDrawCallPerTexture[texture.Id].push(newBatchDrawCall);
             batchDrawCall = newBatchDrawCall;
@@ -162,11 +171,33 @@ export class SpriteRenderer {
             { x: rect.X + rect.Width, y: rect.Y + rect.Height, u: 1.0, v: 1.0 },
             { x: rect.X, y: rect.Y + rect.Height, u: 0.0, v: 1.0 }
         ];
-        
-        let u0 = sourceRect.X / texture.Width;
-        let v0 = sourceRect.Y / texture.Height;
-        let u1 = (sourceRect.X + sourceRect.Width) / texture.Width;
-        let v1 = (sourceRect.Y + sourceRect.Height) / texture.Height;
+
+        const u0 = sourceRect.X / texture.Width;
+        const v0 = sourceRect.Y / texture.Height;
+        const u1 = (sourceRect.X + sourceRect.Width) / texture.Width;
+        const v1 = (sourceRect.Y + sourceRect.Height) / texture.Height;
+
+        this.Vertices[0][0] = vertices[0].x;
+        this.Vertices[0][1] = vertices[0].y;
+        this.Vertices[1][0] = vertices[1].x;
+        this.Vertices[1][1] = vertices[1].y;
+        this.Vertices[2][0] = vertices[2].x;
+        this.Vertices[2][1] = vertices[2].y;
+        this.Vertices[3][0] = vertices[3].x;
+        this.Vertices[3][1] = vertices[3].y;
+
+        // Rotation
+        if (rotation) {
+            if(!rotation.RotationOrigin){
+                vec2.copy(this.RotationOrigin, this.Vertices[0]);
+            }else {
+                this.RotationOrigin[0] = this.Vertices[0][0] + rotation.RotationOrigin[0] * rect.Width;
+                this.RotationOrigin[1] = this.Vertices[0][1] + rotation.RotationOrigin[1] * rect.Height;
+            }
+            for (let i = 0; i < this.Vertices.length; i++) {
+                vec2.rotate(this.Vertices[i], this.Vertices[i], this.RotationOrigin, rotation.Degree);
+            }
+        }
 
         const textureCoordinates = [
             { u: u0, v: v0 },
@@ -175,17 +206,17 @@ export class SpriteRenderer {
             { u: u0, v: v1 }
         ];
 
-        for (let i = 0; i < vertices.length; i++) {
+        for (let i = 0; i < this.Vertices.length; i++) {
             // set position
-            batchDrawCall.VertexData[i * 7 + 0 + iteration] = vertices[i].x;
-            batchDrawCall.VertexData[i * 7 + 1 + iteration] = vertices[i].y;
+            batchDrawCall.VertexData[i * 7 + 0 + iteration] = this.Vertices[i][0];
+            batchDrawCall.VertexData[i * 7 + 1 + iteration] = this.Vertices[i][1];
             // set texture coordinates (u,v)
             batchDrawCall.VertexData[i * 7 + 2 + iteration] = textureCoordinates[i].u;
             batchDrawCall.VertexData[i * 7 + 3 + iteration] = textureCoordinates[i].v
             // set colors (r,g,b)
-            batchDrawCall.VertexData[i * 7 + 4 + iteration] = 1.0;
-            batchDrawCall.VertexData[i * 7 + 5 + iteration] = 1.0;
-            batchDrawCall.VertexData[i * 7 + 6 + iteration] = 1.0;
+            batchDrawCall.VertexData[i * 7 + 4 + iteration] = color.Red;
+            batchDrawCall.VertexData[i * 7 + 5 + iteration] = color.Green;
+            batchDrawCall.VertexData[i * 7 + 6 + iteration] = color.Blue;
         }
 
         batchDrawCall.InstanceCount++;
