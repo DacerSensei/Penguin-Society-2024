@@ -1,7 +1,12 @@
 import { Shader } from "./Shaders/shader.js";
 
 export class SpritePipeline {
-    constructor(device, texture, projectionViewMatrixBuffer){        
+
+    #ProjectionViewBindGroup;
+    #TextureBindGroup;
+    #Pipeline;
+
+    constructor(device, texture, projectionViewMatrixBuffer) {
         const shaderModule = device.createShaderModule({
             code: Shader,
         });
@@ -66,7 +71,7 @@ export class SpritePipeline {
                 }
             }]
         });
-        this.ProjectionViewBindGroup = device.createBindGroup({
+        this.#ProjectionViewBindGroup = device.createBindGroup({
             layout: projectionViewBindGroupLayout,
             entries: [{
                 binding: 0,
@@ -88,7 +93,7 @@ export class SpritePipeline {
                 texture: {}
             }]
         });
-        this.TextureBindGroup = device.createBindGroup({
+        this.#TextureBindGroup = device.createBindGroup({
             layout: textureBindGroupLayout,
             entries: [{
                 binding: 0,
@@ -106,13 +111,13 @@ export class SpritePipeline {
         // and the binding is for the different types of data in group
         // group for container of every sets of data
         const pipelineLayout = device.createPipelineLayout({
-            bindGroupLayouts: [ 
+            bindGroupLayouts: [
                 projectionViewBindGroupLayout,
                 textureBindGroupLayout
             ]
         });
 
-        this.Pipeline = device.createRenderPipeline({
+        this.#Pipeline = device.createRenderPipeline({
             vertex: vertexState,
             fragment: fragmentState,
             primitive: {
@@ -120,5 +125,15 @@ export class SpritePipeline {
             },
             layout: pipelineLayout
         });
+    }
+
+    get ProjectionViewBindGroup() {
+        return this.#ProjectionViewBindGroup;
+    }
+    get TextureBindGroup() {
+        return this.#TextureBindGroup;
+    }
+    get Pipeline() {
+        return this.#Pipeline;
     }
 }

@@ -1,10 +1,17 @@
 export class Texture {
-    constructor(texture, sampler, id, width, height){
-        this.Texture = texture;
-        this.Sampler = sampler;
-        this.Id = id;
-        this.Width = width;
-        this.Height = height;
+
+    #Texture;
+    #Sampler;
+    #Id;
+    #Width;
+    #Height;
+
+    constructor(texture, sampler, id, width, height) {
+        this.#Texture = texture;
+        this.#Sampler = sampler;
+        this.#Id = id;
+        this.#Width = width;
+        this.#Height = height;
     }
 
     /**
@@ -12,7 +19,7 @@ export class Texture {
      * @param {GPUDevice} device - Instance of GPU device in WebGPU.
      * @param {Image} image - Instance of Image.
      */
-    static async CreateTexture(device, image){
+    static async CreateTexture(device, image) {
         const texture = device.createTexture({
             size: {
                 width: image.width,
@@ -56,10 +63,26 @@ export class Texture {
                 reject(error);
             };
         })
-        .then(image => Texture.CreateTexture(device, image))
-        .catch(error => {
-            console.error("Error loading texture:", error);
-            throw error;
-        });
+            .then(image => Texture.CreateTexture(device, image))
+            .catch(error => {
+                console.error("Error loading texture:", error);
+                throw error;
+            });
+    }
+
+    get Texture() {
+        return this.#Texture;
+    }
+    get Sampler() {
+        return this.#Sampler;
+    }
+    get Id() {
+        return this.#Id;
+    }
+    get Width() {
+        return this.#Width;
+    }
+    get Height() {
+        return this.#Height;
     }
 }

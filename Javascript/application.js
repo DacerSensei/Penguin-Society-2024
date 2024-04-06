@@ -14,6 +14,6 @@ Game.InitializeEngine().then(() =>
         player.Draw(Game.SpriteRenderer);
     }
 
-
     Game.Draw()
 });
+
