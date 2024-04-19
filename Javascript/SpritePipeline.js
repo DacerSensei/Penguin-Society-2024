@@ -1,16 +1,27 @@
 import { Shader } from "./Shaders/shader.js";
+import { Texture } from "./Texture.js";
 
+/**
+ * Represents a Pipelines
+ * @class
+ */
 export class SpritePipeline {
 
-    #ProjectionViewBindGroup;
-    #TextureBindGroup;
-    #Pipeline;
+    /** @type {GPURenderPipeline} */#Pipeline;
+    /** @type {GPUBindGroup} */ #ProjectionViewBindGroup;
+    /** @type {GPUBindGroup} */#TextureBindGroup;
 
+    /**
+     * @param {GPUDevice} device 
+     * @param {Texture} texture 
+     * @param {GPUBuffer} projectionViewMatrixBuffer 
+     */
     constructor(device, texture, projectionViewMatrixBuffer) {
         const shaderModule = device.createShaderModule({
             code: Shader,
         });
 
+        /** @type {GPUVertexBufferLayout} */
         const bufferLayout = {
             arrayStride: 7 * Float32Array.BYTES_PER_ELEMENT, // 7 because of vertices array is 7 per vertex
             attributes: [
@@ -33,6 +44,7 @@ export class SpritePipeline {
             stepMode: "vertex"
         };
 
+        /** @type {GPUVertexState} */
         const vertexState = {
             module: shaderModule,
             entryPoint: "VertexMain",
@@ -41,6 +53,7 @@ export class SpritePipeline {
             ]
         };
 
+        /** @type {GPUFragmentState} */
         const fragmentState = {
             module: shaderModule,
             entryPoint: "FragmentMain",

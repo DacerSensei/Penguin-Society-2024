@@ -1,3 +1,8 @@
+//ts-check
+/**
+ * Controller for the player
+ * @class
+ */
 export class InputManager {
     constructor(){
         this.KeyDown = {};

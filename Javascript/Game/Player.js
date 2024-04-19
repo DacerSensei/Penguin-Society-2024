@@ -1,23 +1,32 @@
 import { Rect } from "../Rect.js";
 import { Content } from "../Content.js";
 import { Color } from "../Color.js";
-import * as vec2 from "../../Library/Matrix/vec2.js";
+import * as Vector2D from "../Matrix/Vector2D.js";
 import { Rotation } from "../Rotation.js";
 import { Origin } from "../Toolkit.js";
+import { InputManager } from "../InputManager.js";
+import { Texture } from "../Texture.js";
 
-const SPEED = 0.25;
-
+/**
+ * Represents player in the game
+ * @class
+ */
 export class Player {
 
-    #InputManager;
-    #MovementDirection;
-    #Texture;
-    #SourceRect;
-    #DrawRect;
+    /** @type {InputManager} */ #InputManager;
+    /** @type {Vector2D} */ #MovementDirection;
+    /** @type {Texture} */ #Texture;
+    /** @type {Rect} */ #SourceRect;
+    /** @type {Rect} */ #DrawRect;
+    /** @type {number} */ #Speed = 0.25;
 
+    /**
+    * Create an instance of player
+    * @param {InputManager} inputManager - InputManager to control player
+    */
     constructor(inputManager) {
         this.#InputManager = inputManager;
-        this.#MovementDirection = vec2.create();
+        this.#MovementDirection = Vector2D.Create();
 
         const playerSprite = Content.Sprites["CharacterWhite"];
         this.#Texture = playerSprite.Texture;
@@ -42,15 +51,20 @@ export class Player {
             this.#MovementDirection[1] = 1;
         }
 
-        vec2.normalize(this.#MovementDirection, this.#MovementDirection);
-        this.#DrawRect.X += this.#MovementDirection[0] * SPEED * deltaTime;
-        this.#DrawRect.Y += this.#MovementDirection[1] * SPEED * deltaTime;
+        Vector2D.Normalize(this.#MovementDirection, this.#MovementDirection);
+        this.#DrawRect.X += this.#MovementDirection[0] * this.#Speed * deltaTime;
+        this.#DrawRect.Y += this.#MovementDirection[1] * this.#Speed * deltaTime;
     }
+
     Rotation = new Rotation(0, Origin.Center);
+
     Draw(spriteRenderer) {
+        this.Rotation.Degree += 0.02;
         const resize = new Rect(this.#DrawRect.X, this.#DrawRect.Y, 96, 96);
-        this.Rotation.Degree += .001;
-        console.log(this.Rotation.Degree);
         spriteRenderer.DrawSpriteSource(this.#Texture, resize, this.#SourceRect, undefined, this.Rotation);
+    }
+
+    get Speed() {
+        return this.#Speed;
     }
 }

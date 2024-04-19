@@ -1,20 +1,20 @@
 import { Content } from "./Content.js";
 import { SpriteRenderer } from "./SpriteRenderer.js";
 import { InputManager } from "./InputManager.js";
-
+//ts-check
 /**
  * Dacer Game Engine
  * @class
  */
 export class GameEngine {
 
-    #LastTime;
-    #InputManager;
-    #PassEncoder;
-    #SpriteRenderer;
-    #Canvas;
-    #Context;
-    #Device;
+    /** @type {number} */ #LastTime;
+    /** @type {InputManager} */ #InputManager;
+    /** @type {GPURenderPassEncoder} */ #PassEncoder;
+    /** @type {SpriteRenderer} */ #SpriteRenderer;
+    /** @type {Object} */ #Canvas;
+    /** @type {GPUCanvasContext} */ #Context;
+    /** @type {GPUDevice} */ #Device;
 
     constructor(){
         this.#LastTime = 0;
@@ -23,7 +23,6 @@ export class GameEngine {
 
     async InitializeEngine() {
         this.#PassEncoder;
-
         this.#Canvas = document.getElementById("Scene");
         this.#Canvas.width = 1024;
         this.#Canvas.height = 576;
@@ -63,6 +62,8 @@ export class GameEngine {
         this.OnUpdate(deltaTime);
         
         const commandEncoder = this.#Device.createCommandEncoder();
+
+        /** @type {GPURenderPassDescriptor} */
         const renderPassDescriptor = {
             colorAttachments: [{
                 view: this.#Context.getCurrentTexture().createView(),

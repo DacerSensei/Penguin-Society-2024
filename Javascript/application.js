@@ -2,8 +2,7 @@ import { Player } from "./Game/Player.js";
 import { GameEngine } from "./GameEngine.js";
 
 const Game = new GameEngine();
-Game.InitializeEngine().then(() => 
-{
+Game.InitializeEngine().then(() => {
     const player = new Player(Game.InputManager);
 
     Game.OnUpdate = (deltaTime) => {
@@ -16,4 +15,3 @@ Game.InitializeEngine().then(() =>
 
     Game.Draw()
 });
-

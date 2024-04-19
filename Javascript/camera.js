@@ -5,11 +5,11 @@ import * as mat4 from "../Library/Matrix/mat4.js";
  */
 export class Camera {
 
-    #Width;
-    #Height;
-    #ProjectionViewMatrix;
-    #Projection;
-    #View;
+    /** @type {number} */ #Width;
+    /** @type {number} */ #Height;
+    /** @type {ArrayBuffer} */ #ProjectionViewMatrix;
+    /** @type {mat4} */ #Projection;
+    /** @type {mat4} */ #View;
 
     /**
      * Creates an instance of Camera.

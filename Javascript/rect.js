@@ -1,31 +1,32 @@
-import { Toolkit } from "./Toolkit.js";
 /**
  * Represents a Rectangle in 2D space.
  * @class
  */
 export class Rect {
+
+    // private variables
+    /** @type {Number} */ #X;
+    /** @type {Number} */ #Y;
+    /** @type {Number} */ #Width;
+    /** @type {Number} */ #Height;
+
     /**
      * Creates an instance of Rectangle.
-     * @param {number} x - The x-coordinate.
-     * @param {number} y - The y-coordinate.
-     * @param {number} width - Width of the rectangle.
-     * @param {number} height - Height of the rectangle.
+     * @param {Number} x - The x-coordinate.
+     * @param {Number} y - The y-coordinate.
+     * @param {Number} width - Width of the rectangle.
+     * @param {Number} height - Height of the rectangle.
      */
     constructor(x, y, width, height) {
-        this.X = x;
-        this.Y = y;
-        this.Width = width;
-        this.Height = height;
+        this.#X = x;
+        this.#Y = y;
+        this.#Width = width;
+        this.#Height = height;
     }
 
     Copy() {
         return new Rect(this.X, this.Y, this.Width, this.Height);
     }
-
-    #X;
-    #Y;
-    #Width;
-    #Height;
 
     get X() {
         return this.#X;
@@ -35,7 +36,6 @@ export class Rect {
         if (this.#X == value) {
             return;
         }
-        Toolkit.IsNumber(value);
 
         this.#X = value;
     }
@@ -48,7 +48,6 @@ export class Rect {
         if (this.#Y == value) {
             return;
         }
-        Toolkit.IsNumber(value);
 
         this.#Y = value;
     }
@@ -61,7 +60,6 @@ export class Rect {
         if (this.#Width == value) {
             return;
         }
-        Toolkit.IsNumber(value);
 
         this.#Width = value;
     }
@@ -74,7 +72,6 @@ export class Rect {
         if (this.#Height == value) {
             return;
         }
-        Toolkit.IsNumber(value);
 
         this.#Height = value;
     }

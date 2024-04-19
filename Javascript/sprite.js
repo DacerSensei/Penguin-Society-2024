@@ -1,8 +1,10 @@
+import { Texture } from "./Texture.js";
+import { Rect } from "./Rect.js";
 export class Sprite {
 
-    #Texture;
-    #DrawRect;
-    #SourceRect;
+    /** @type {Texture} */ #Texture;
+    /** @type {Rect} */ #DrawRect;
+    /** @type {Rect} */ #SourceRect;
 
     /**
      * @param {Texture} texture - Instance of Texture.

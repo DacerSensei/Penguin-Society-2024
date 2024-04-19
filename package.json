@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@webgpu/types": "^0.1.40"
+  }
+}

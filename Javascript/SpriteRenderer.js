@@ -5,8 +5,8 @@ import { Rect } from "./Rect.js";
 import { Texture } from "./Texture.js";
 import { Color } from "./Color.js";
 import { Rotation } from "./Rotation.js";
+import * as Vector2D from "./Matrix/Vector2D.js";
 import { Origin } from "./Toolkit.js";
-import * as vec2 from "../Library/Matrix/vec2.js";
 
 const MAX_NUMBER_OF_SPRITE = 10000;
 const INDICES_PER_SPRITE = 6; // 2 triangle per sprite
@@ -18,24 +18,24 @@ const FLOAT_PER_SPRITE = 4 * FLOAT_PER_VERTEX;
  * @class
  */
 export class SpriteRenderer {
-    #Device;
-    #Camera;
-    #CurrentTexture;
-    #PipelinesPerTexture;
-    #BatchDrawCallPerTexture;
-    #AllocatedVertexBuffers;
-    #Vertices;
-    #RotationOrigin
-    #DefaultColor;
-    #PassEncoder;
-    #ProjectionViewMatrixBuffer;
-    #IndexBuffer;
+    /** @type {GPUDevice} */ #Device;
+    /** @type {Camera} */ #Camera;
+    /** @type {Texture} */ #CurrentTexture;
+    /** @type {*} */ #PipelinesPerTexture;
+    /** @type {*} */ #BatchDrawCallPerTexture;
+    /** @type {*} */ #AllocatedVertexBuffers;
+    /** @type {[Vector2D,Vector2D,Vector2D,Vector2D]} */ #Vertices;
+    /** @type {Vector2D} */ #RotationOrigin
+    /** @type {Color} */ #DefaultColor;
+    /** @type {GPURenderPassEncoder} */ #PassEncoder;
+    /** @type {GPUBuffer} */ #ProjectionViewMatrixBuffer;
+    /** @type {GPUBuffer} */ #IndexBuffer;
 
     /**
      * Creates an instance of SpriteRenderer.
-     * @param {GPUDevice} device - Instance of GPU device in WebGPU..
-     * @param {number} width - Width of the canvas.
-     * @param {number} height - Height of the canvas.
+     * @param {*} device - Instance of GPU device in WebGPU.
+     * @param {Number} width - Width of the canvas.
+     * @param {Number} height - Height of the canvas.
      */
     constructor(device, width, height) {
         this.#Device = device;
@@ -46,8 +46,8 @@ export class SpriteRenderer {
         this.#BatchDrawCallPerTexture = {};
         this.#AllocatedVertexBuffers = [];
 
-        this.#Vertices = [vec2.create(), vec2.create(), vec2.create(), vec2.create()]; // top left - top right - bottom right - bottom left
-        this.#RotationOrigin = vec2.create();
+        this.#Vertices = [Vector2D.Create(), Vector2D.Create(), Vector2D.Create(), Vector2D.Create()]; // top left - top right - bottom right - bottom left
+        this.#RotationOrigin = Vector2D.Create();
 
         this.#DefaultColor = new Color();
     }
@@ -71,7 +71,7 @@ export class SpriteRenderer {
     }
 
     /**
-     * @param {GPURendererPassEncoder} passEncoder - Instance of GPURendererPassEncoder from WebGPU.
+     * @param {Object} passEncoder - Instance of GPURendererPassEncoder from WebGPU.
      */
     FramePass(passEncoder) {
         this.#PassEncoder = passEncoder;
@@ -150,7 +150,7 @@ export class SpriteRenderer {
     /**
      * @param {Texture} texture - Instance of Texture.
      * @param {Rect} rect - Instance of Rect.
-     * @param {Rect} rect - Instance of Rect.
+     * @param {Rect} sourceRect - Instance of Rect.
      * @param {Color} color - Instance of Rect.
      * @param {Rotation} rotation - Instance of Rect.
      */
@@ -207,14 +207,14 @@ export class SpriteRenderer {
 
         // Rotation
         if (rotation) {
-            if(!rotation.RotationOrigin){
-                vec2.copy(this.#RotationOrigin, this.#Vertices[0]);
-            }else {
+            if (!rotation.RotationOrigin) {
+                Vector2D.Copy(this.#RotationOrigin, this.#Vertices[0]);
+            } else {
                 this.#RotationOrigin[0] = this.#Vertices[0][0] + rotation.RotationOrigin[0] * rect.Width;
                 this.#RotationOrigin[1] = this.#Vertices[0][1] + rotation.RotationOrigin[1] * rect.Height;
             }
             for (let i = 0; i < this.#Vertices.length; i++) {
-                vec2.rotate(this.#Vertices[i], this.#Vertices[i], this.#RotationOrigin, rotation.Degree);
+                Vector2D.Rotate(this.#Vertices[i], this.#Vertices[i], this.#RotationOrigin, rotation.Degree);
             }
         }
 

@@ -1,12 +1,22 @@
-import { Toolkit } from "./Toolkit.js";
-
+import { Origin } from "./Toolkit.js";
+import * as Vector2D from "./Matrix/Vector2D.js";
+/**
+ * Represents a Rotation in 2D space.
+ * @class
+ */
 export class Rotation {
 
-    #Degree;
-    #RotationOrigin;
+    // private variables
+    /** @type {number} */ #Degree;
+    /** @type {Vector2D} */ #RotationOrigin;
 
-    constructor(degree, rotationOrigin = null){
-        this.#Degree = degree;
+    /**
+     * Creates an instance of Rotation.
+     * @param {number} degree - Angle Degree.
+     * @param {Vector2D} rotationOrigin - Anchor.
+     */
+    constructor(degree, rotationOrigin = Origin.Center){
+        this.#Degree = degree * Math.PI / 180;
         this.#RotationOrigin = rotationOrigin;
     }
 
@@ -21,7 +31,6 @@ export class Rotation {
         if (this.#Degree == value) {
             return;
         }
-        Toolkit.IsNumber(value);
 
         this.#Degree = value;
     }

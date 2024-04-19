@@ -1,11 +1,19 @@
 export class Texture {
 
-    #Texture;
-    #Sampler;
-    #Id;
-    #Width;
-    #Height;
+    /** @type {GPUTexture} */ #Texture;
+    /** @type {GPUSampler} */ #Sampler;
+    /** @type {string} */ #Id;
+    /** @type {number} */ #Width;
+    /** @type {number} */ #Height;
 
+    /**
+     * Creates an instance of Texture.
+     * @param {GPUTexture} texture - Texture of Texture.
+     * @param {GPUSampler} sampler - Sampler of Texture.
+     * @param {string} id - Id of Texture.
+     * @param {number} width - Width of the Texture.
+     * @param {number} height - Height of the Texture.
+     */
     constructor(texture, sampler, id, width, height) {
         this.#Texture = texture;
         this.#Sampler = sampler;
@@ -15,9 +23,8 @@ export class Texture {
     }
 
     /**
-     * Creates an instance of Texture.
      * @param {GPUDevice} device - Instance of GPU device in WebGPU.
-     * @param {Image} image - Instance of Image.
+     * @param {HTMLImageElement} image - Instance of Image.
      */
     static async CreateTexture(device, image) {
         const texture = device.createTexture({
@@ -51,7 +58,7 @@ export class Texture {
     /**
      * Creates an instance of Texture from URL.
      * @param {GPUDevice} device - Instance of GPU device in WebGPU.
-     * @param {string} url - URL string.
+     * @param {String} url - URL string.
      */
     static async CreateTextureFromURL(device, url) {
         return new Promise((resolve, reject) => {

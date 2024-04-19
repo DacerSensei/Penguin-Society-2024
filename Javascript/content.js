@@ -6,6 +6,10 @@ export class Content {
     constructor() {
         this.Sprites = {};
     }
+    /**
+     * 
+     * @param {GPUDevice} device 
+     */
     static async Initialize(device) {
         this.PlayerTexture = await Texture.CreateTextureFromURL(device, "/Assets/uv_test.png");
         this.Test = await Texture.CreateTextureFromURL(device, "/Assets/SpriteSheet/sample.png");
